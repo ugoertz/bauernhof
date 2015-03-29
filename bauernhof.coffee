@@ -98,7 +98,7 @@ update_infos = ->
     $('#infos').append "<div style=\"display: inline-block; padding: 5px; margin: 5px; background-color: lightgreen; width: 150px; border: 1px solid green;\">#{ Math.max(geld, 0) } Münzen</div>"
     for kuh in kuehe
         do ->
-            $('#infoskuehe').append "<div style=\"display: inline-block; padding: 5px; margin: 5px; background-color: #{ kuh.farbe }; width: 150px; border: 1px solid green;\"><b>#{ kuh.name }</b><br>#{ kuh.alter } Jahre<br>Hunger: #{ kuh.hunger }</div>"
+            $('#infoskuehe').append "<div style=\"display: inline-block; width: 150px; padding: 5px; margin: 5px;\"><div style=\"padding: 5px; margin: 5px; background-color: #{ kuh.farbe };\"><b>#{ kuh.name }</b><br>#{ kuh.alter } Jahre<br>Hunger: #{ kuh.hunger }</div><img style=\"margin-left: 5px;\" src=\"img/kuh1.jpg\"></div>"
 
 
 jQuery ->
