@@ -1,0 +1,35 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="js/coffee-script.js"></script>
+    <script type="text/coffeescript" src="bauernhof.coffee"></script>
+    <title>Unser Bauernhofspiel</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <h1>Unser Bauernhofspiel</h1>
+                <input type="button" class="aktion btn btn-default" id="fuettern" value="Füttern">
+                <input type="button" class="aktion btn btn-default" id="kuhkaufen" value="Kuh kaufen">
+                <input type="button" class="aktion btn btn-default" id="kuhverkaufen" value="Kuh verkaufen">
+                <input type="button" class="aktion btn btn-default" id="naechstesjahr" value="Nächstes Jahr">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <div id="infos" class="infos" style="margin-top:30px; background-color: lightgray;"></div>
+                <div id="infoskuehe" class="infos" style="margin-top:30px; background-color: lightgray;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <div id="nachrichten" style="padding: 15px; margin-top:30px; border: 1px solid lightgray;"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
