@@ -3,7 +3,7 @@ farben = ["#6D7B8D", "#657383", "#616D7E", "#566D7E", "#737CA1", "#2B60DE", "#69
 würfel = (l) -> l[Math.floor(Math.random() * l.length)]
 
 
-klasse Kuh
+class Kuh
 
     constructor: (@alter) ->
         # alter ist eine Zahl >=0
@@ -28,17 +28,17 @@ klasse Kuh
 
     wird_gefuettert: ->
         @hunger -= 10
-        wenn @hunger < 0
+        if @hunger < 0
             @hunger = 0
 
     ist_krank: ->
         return Math.random() < 0.1
 
     ist_gestorben: ->
-        return @hunger >= 99 oder (Math.random() < @alter * 1/25 - 0.1)
+        return @hunger >= 99 or (Math.random() < @alter * 1/25 - 0.1)
 
     bekommt_kaelbchen: ->
-        return @alter >= 3 und Math.random() < 0.2
+        return @alter >= 3 and Math.random() < 0.2
 
     tick: ->
         @hunger += 8
@@ -62,7 +62,7 @@ kuh_verkaufen = ->
 
 
 fuettern = ->
-    für kuh in kuehe
+    for kuh in kuehe
         do ->
             kuh.wird_gefuettert()
             geld -= 1
@@ -87,13 +87,13 @@ tick = ->
                 kuh.alter = -1
     kuehe = (kuh for kuh in kuehe when kuh.alter >= 0)
 
-    wenn geld < 0
-        nachricht "Du bist pleite!"
+    if geld < 0
+        alert "Du bist pleite!"
 
         # buttons deaktivieren
         $('input.aktion').prop "disabled", true
 
-update = ->
+update_infos = ->
     $('.infos').html ""
     $('#infos').append "<div style=\"display: inline-block; padding: 5px; margin: 5px; background-color: lightgreen; width: 150px; border: 1px solid green;\">#{ Math.max(geld, 0) } Münzen</div>"
     for kuh in kuehe
@@ -101,24 +101,25 @@ update = ->
             $('#infoskuehe').append "<div style=\"display: inline-block; padding: 5px; margin: 5px; background-color: #{ kuh.farbe }; width: 150px; border: 1px solid green;\"><b>#{ kuh.name }</b><br>#{ kuh.alter } Jahre<br>Hunger: #{ kuh.hunger }</div>"
 
 
-
-
-
 jQuery ->
+    # buttons mit den entsprechenden funktionen verbinden
     $('#fuettern').click ->
         fuettern()
-        update()
+        update_infos()
     $('#kuhkaufen').click ->
         kuh_kaufen()
-        update()
+        update_infos()
     $('#kuhverkaufen').click ->
         kuh_verkaufen()
-        update()
+        update_infos()
     $('#naechstesjahr').click ->
         tick()
-        update()
+        update_infos()
+
+    # Jahr 0
     tick()
-    update()
+    update_infos()
+
     # buttons aktivieren
     $('input.aktion').prop "disabled", false
 
