@@ -18,34 +18,50 @@ class Kuh
         # 0 angenommen werden)
         @hunger = 30
 
+        @gemolken = false
+
         @farbe = würfel farben
-        @name = würfel ['Henriette', 'Elsa', 'Else', 'Milky', 'Steaky', 'Pia']
+        @name = würfel ['Berta', 'Lotta', 'Josefine', 'Henriette', 'Elsa', 'Else', 'Milky', 'Steaky', 'Pia']
 
 
     wird_gemolken: ->
         # Gibt zurück, wie viel Milch die Kuh in diesem Jahr gibt (in 100l).
-        return 29
+        if @gemolken
+            return 0
+        @gemolken = true
+        geld += if @alter >= 3 then 7 else 0
 
     wird_gefuettert: ->
         @hunger -= 10
         if @hunger < 0
             @hunger = 0
+        geld -= 5
 
     ist_krank: ->
-        return Math.random() < 0.1
+        Math.random() < 0.1
 
     ist_gestorben: ->
-        return @hunger >= 99 or (Math.random() < @alter * 1/25 - 0.1)
+        if @hunger >= 49
+            return "Die Kuh #{ @name } ist verhungert."
+        if Math.random() < @alter * 1/25 - 0.1
+            return "Die Kuh #{ @name } ist gestorben."
+
 
     bekommt_kaelbchen: ->
-        return @alter >= 3 and Math.random() < 0.2
+        @alter >= 3 and Math.random() < 0.2
+
+    bild: ->
+        if (@gemolken or @alter < 3) then "kuh1" else "kuh2"
+
 
     tick: ->
         @hunger += 8
         @alter += 1
+        @gemolken = false
 
 
 geld = 200
+modus = "melken"
 kuehe = []
 kuehe.push new Kuh 5 for i in [1..3]
 
@@ -56,16 +72,16 @@ kuh_kaufen = ->
         geld -= 50
 
 
-kuh_verkaufen = ->
-    kuehe = kuehe.slice(1)
-    geld += 50
-
-
-fuettern = ->
-    for kuh in kuehe
-        do ->
-            kuh.wird_gefuettert()
-            geld -= 1
+bearbeiten = (m, id) ->
+    console.log m, id
+    if modus == "melken"
+        kuehe[id].wird_gemolken()
+    if modus == "fuettern"
+        kuehe[id].wird_gefuettert()
+    if modus == "kuh_verkaufen"
+        kuehe.splice(id, 1)
+        geld += 40
+    update_infos()
 
 nachricht = (s, margin=5) ->
     $('#nachrichten').prepend "<p style=\"margin-bottom: #{ margin }px;\">#{ s }</p>"
@@ -82,8 +98,9 @@ tick = ->
             if kuh.ist_krank()
                 geld -= 30
                 nachricht "Die Kuh #{ kuh.name } ist krank. Der Tierarzt kommt. Das kostet 30 Münzen."
-            if kuh.ist_gestorben()
-                nachricht "Die Kuh #{ kuh.name } ist gestorben."
+            n = kuh.ist_gestorben()
+            if n
+                nachricht n
                 kuh.alter = -1
     kuehe = (kuh for kuh in kuehe when kuh.alter >= 0)
 
@@ -96,25 +113,39 @@ tick = ->
 update_infos = ->
     $('.infos').html ""
     $('#infos').append "<div style=\"display: inline-block; padding: 5px; margin: 5px; background-color: lightgreen; width: 150px; border: 1px solid green;\">#{ Math.max(geld, 0) } Münzen</div>"
+
+    ctr = 0
     for kuh in kuehe
         do ->
-            $('#infoskuehe').append "<div style=\"display: inline-block; width: 150px; padding: 5px; margin: 5px;\"><div style=\"padding: 5px; margin: 5px; background-color: #{ kuh.farbe };\"><b>#{ kuh.name }</b><br>#{ kuh.alter } Jahre<br>Hunger: #{ kuh.hunger }</div><img style=\"margin-left: 5px;\" src=\"img/kuh1.jpg\"></div>"
+            $('#infoskuehe').append "<div class=\"kuh\" id=\"kuh#{ ctr }\" style=\"display: inline-block; width: 150px; padding: 5px; margin: 5px;\"><div style=\"padding: 5px; margin: 5px; background-color: #{ kuh.farbe };\"><b>#{ kuh.name }</b><br>#{ kuh.alter } Jahre<br>Hunger: #{ kuh.hunger }</div><img style=\"margin-left: 5px;\" src=\"img/#{ kuh.bild() }.jpg\"></div>"
+            ctr += 1
+
+    $('.kuh').click ->
+        bearbeiten modus, +$(this).attr('id')[3..]
 
 
 jQuery ->
     # buttons mit den entsprechenden funktionen verbinden
     $('#fuettern').click ->
-        fuettern()
+        modus = "fuettern"
+        $('div').css('cursor', 'grab')
+        update_infos()
+    $('#melken').click ->
+        modus = "melken"
+        $('div').css('cursor', 'cell')
         update_infos()
     $('#kuhkaufen').click ->
         kuh_kaufen()
         update_infos()
     $('#kuhverkaufen').click ->
-        kuh_verkaufen()
+        modus = "kuh_verkaufen"
+        $('div').css('cursor', 'e-resize')
         update_infos()
     $('#naechstesjahr').click ->
         tick()
         update_infos()
+
+    $('div').css('cursor', 'cell')
 
     # Jahr 0
     tick()
