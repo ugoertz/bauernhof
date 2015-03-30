@@ -96,8 +96,8 @@ tick = ->
                 kuehe.push new Kuh 0
                 nachricht "Die Kuh #{ kuh.name } bekommt ein Kälbchen."
             if kuh.ist_krank()
-                geld -= 30
-                nachricht "Die Kuh #{ kuh.name } ist krank. Der Tierarzt kommt. Das kostet 30 Münzen."
+                geld -= 15
+                nachricht "Die Kuh #{ kuh.name } ist krank. Der Tierarzt kommt. Das kostet 15 Münzen."
             n = kuh.ist_gestorben()
             if n
                 nachricht n
